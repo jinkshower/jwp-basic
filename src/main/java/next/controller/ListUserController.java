@@ -6,10 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import core.db.DataBase;
 import core.mvc.Controller;
-import next.dao.InsertJdbcTemplate;
-import next.dao.UpdateJdbcTemplate;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;

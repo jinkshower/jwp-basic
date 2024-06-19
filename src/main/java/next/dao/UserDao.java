@@ -9,13 +9,12 @@ import java.util.List;
 
 import core.jdbc.ConnectionManager;
 import next.model.User;
-import org.h2.command.dml.Update;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        new InsertJdbcTemplate() {
+        new JdbcTemplate() {
             @Override
-            public void setValuesForInsert(final User user, final PreparedStatement pstmt)
+            public void setValues(final User user, final PreparedStatement pstmt)
                 throws SQLException {
                 pstmt.setString(1, user.getUserId());
                 pstmt.setString(2, user.getPassword());
@@ -24,17 +23,17 @@ public class UserDao {
             }
 
             @Override
-            public String createQueryForInsert() {
+            public String createQuery() {
                 return "INSERT INTO USERS VALUES (?, ?, ?, ?)";
             }
-        }.insert(user);
+        }.execute(user);
     }
 
     public void update(User user) throws SQLException {
         // TODO 구현 필요함.
-        new UpdateJdbcTemplate() {
+        new JdbcTemplate() {
             @Override
-            public void setValuesForUpdate(final User user, final PreparedStatement pstmt)
+            public void setValues(final User user, final PreparedStatement pstmt)
                 throws SQLException {
                 pstmt.setString(1, user.getPassword());
                 pstmt.setString(2, user.getName());
@@ -43,10 +42,10 @@ public class UserDao {
             }
 
             @Override
-            public String createQueryForUpdate() {
+            public String createQuery() {
                 return "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
             }
-        }.update(user);
+        }.execute(user);
     }
 
     public List<User> findAll() throws SQLException {
