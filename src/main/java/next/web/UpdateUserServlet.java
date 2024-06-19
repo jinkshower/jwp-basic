@@ -2,7 +2,6 @@ package next.web;
 
 import core.db.DataBase;
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,19 +11,19 @@ import next.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet("/user/updateForm")
-public class UpdateUserFormServlet extends HttpServlet {
-    private static final Logger log = LoggerFactory.getLogger(UpdateUserFormServlet.class);
+@WebServlet("/user/update")
+public class UpdateUserServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(UpdateUserServlet.class);
 
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp)
         throws ServletException, IOException {
         String userId = req.getParameter("userId");
-        User user = DataBase.findUserById(userId);
-        log.debug("Update Form Request for user : {}", user);
+        log.debug("Update Request for userId : {}", userId);
 
-        req.setAttribute("user", user);
-        RequestDispatcher rd = req.getRequestDispatcher("/user/updateForm.jsp");
-        rd.forward(req, resp);
+        User user = DataBase.findUserById(userId);
+        DataBase.update(new User(userId, req.getParameter("password"), req.getParameter("name"), req.getParameter("email")));
+
+        resp.sendRedirect("/user/list");
     }
 }

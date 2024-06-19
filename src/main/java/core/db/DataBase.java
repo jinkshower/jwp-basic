@@ -21,4 +21,9 @@ public class DataBase {
     public static Collection<User> findAll() {
         return users.values();
     }
+
+    public static User update(User updatedUser) {
+        users.put(updatedUser.getUserId(), updatedUser);
+        return updatedUser;
+    }
 }
