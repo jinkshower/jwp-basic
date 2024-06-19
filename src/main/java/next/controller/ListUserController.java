@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import core.mvc.Controller;
+import next.dao.JdbcTemplate;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class ListUserController implements Controller {
         if (!UserSessionUtils.isLogined(req.getSession())) {
             return "redirect:/users/loginForm";
         }
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new JdbcTemplate());
         List<User> all = new ArrayList<>();
         try {
             all = userDao.findAll();

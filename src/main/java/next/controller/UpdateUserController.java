@@ -3,6 +3,7 @@ package next.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import next.dao.JdbcTemplate;
 import next.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class UpdateUserController implements Controller {
         log.debug("Update User : {}", updateUser);
         user.update(updateUser);
 
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new JdbcTemplate());
         try {
             userDao.update(updateUser);
         } catch (Exception e) {

@@ -11,32 +11,28 @@ import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class UserDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public UserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+
     public void insert(User user) throws SQLException {
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-        new JdbcTemplate().execute(sql, pstmt -> {
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getEmail());
-            return pstmt;
-        });
+        jdbcTemplate.execute(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public void update(User user) throws SQLException {
         // TODO 구현 필요함.
         String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
-        new JdbcTemplate().execute(sql, pstmt -> {
-            pstmt.setString(1, user.getPassword());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getUserId());
-            return pstmt;
-        });
+        jdbcTemplate.execute(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     public List<User> findAll() throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        List<User> query = new JdbcTemplate().query(sql, pstmt -> pstmt,
+        List<User> query = jdbcTemplate.query(sql, pstmt -> pstmt,
             rs -> new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                 rs.getString("email")));
         return query;
@@ -44,7 +40,7 @@ public class UserDao {
 
     public User findByUserId(String userId) throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return new JdbcTemplate().queryForObject(sql,
+        return jdbcTemplate.queryForObject(sql,
             pstmt -> {
             pstmt.setString(1, userId);
             return pstmt;

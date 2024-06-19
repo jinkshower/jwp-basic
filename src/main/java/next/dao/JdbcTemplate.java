@@ -19,6 +19,17 @@ public class JdbcTemplate {
         }
     }
 
+    public void execute(String sql, Object... parameters) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.length; i++) {
+                pstmt.setObject(i + 1, parameters[i]);
+            }
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
+        }
+    }
+
     public <T> T queryForObject(String sql, PreparedStatementSetter pstst, RowMapper<T> rm) {
         try (Connection con = ConnectionManager.getConnection();
             PreparedStatement pstmt = con.prepareStatement(sql)) {
