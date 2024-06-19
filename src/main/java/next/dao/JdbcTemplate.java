@@ -10,74 +10,45 @@ import java.util.List;
 
 public class JdbcTemplate {
 
-    public void execute(String sql, PreparedStatementSetter pstst) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
+    public void execute(String sql, PreparedStatementSetter pstst) {
+        try (Connection con = ConnectionManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstst.setValues(pstmt);
             pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-
-            if (con != null) {
-                con.close();
-            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
-    public Object queryForObject(String sql, PreparedStatementSetter pstst, RowMapper rm) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
+    public <T> T queryForObject(String sql, PreparedStatementSetter pstst, RowMapper<T> rm) {
+        try (Connection con = ConnectionManager.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+
             pstst.setValues(pstmt);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rm.mapRow(rs);
-            } else {
-                return null;
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rm.mapRow(rs);
+                } else {
+                    return null;
+                }
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
-    public List<Object> query(String sql, PreparedStatementSetter pstst, RowMapper rm) throws SQLException {
-        List<Object> objects = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                objects.add(rm.mapRow(rs));
+    public <T> List<T> query(String sql, PreparedStatementSetter pstst, RowMapper<T> rm) {
+        List<T> objects = new ArrayList<>();
+
+        try (Connection con = ConnectionManager.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+            try (ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()) {
+                    objects.add(rm.mapRow(rs));
+                }
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
         return new ArrayList<>(objects);
     }

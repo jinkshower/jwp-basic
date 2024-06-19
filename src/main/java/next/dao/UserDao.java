@@ -36,22 +36,15 @@ public class UserDao {
 
     public List<User> findAll() throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        List<Object> query = new JdbcTemplate().query(sql, pstmt -> pstmt,
+        List<User> query = new JdbcTemplate().query(sql, pstmt -> pstmt,
             rs -> new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                 rs.getString("email")));
-
-        List<User> users = new ArrayList<>();
-        for (Object obj : query) {
-            if (obj instanceof User) {
-                users.add((User) obj);
-            }
-        }
-        return users;
+        return query;
     }
 
     public User findByUserId(String userId) throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return (User) new JdbcTemplate().queryForObject(sql,
+        return new JdbcTemplate().queryForObject(sql,
             pstmt -> {
             pstmt.setString(1, userId);
             return pstmt;
