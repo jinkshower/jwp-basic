@@ -7,17 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import next.model.User;
 
-public abstract class JdbcTemplate {
+public class JdbcTemplate {
 
-    public void execute(String sql) throws SQLException {
+    public void execute(String sql, PreparedStatementSetter pstst) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
             con = ConnectionManager.getConnection();
             pstmt = con.prepareStatement(sql);
-            setValues(pstmt);
+            pstst.setValues(pstmt);
             pstmt.executeUpdate();
         } finally {
             if (pstmt != null) {
@@ -30,17 +29,17 @@ public abstract class JdbcTemplate {
         }
     }
 
-    public Object queryForObject(String sql) throws SQLException {
+    public Object queryForObject(String sql, PreparedStatementSetter pstst, RowMapper rm) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             con = ConnectionManager.getConnection();
             pstmt = con.prepareStatement(sql);
-            setValues(pstmt);
+            pstst.setValues(pstmt);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return mapRow(rs);
+                return rm.mapRow(rs);
             } else {
                 return null;
             }
@@ -57,7 +56,7 @@ public abstract class JdbcTemplate {
         }
     }
 
-    public List<Object> query(String sql) throws SQLException {
+    public List<Object> query(String sql, PreparedStatementSetter pstst, RowMapper rm) throws SQLException {
         List<Object> objects = new ArrayList<>();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -67,7 +66,7 @@ public abstract class JdbcTemplate {
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                objects.add(mapRow(rs));
+                objects.add(rm.mapRow(rs));
             }
         } finally {
             if (rs != null) {
@@ -82,7 +81,4 @@ public abstract class JdbcTemplate {
         }
         return new ArrayList<>(objects);
     }
-
-    public abstract void setValues(PreparedStatement pstmt) throws SQLException;
-    public abstract Object mapRow(ResultSet rs) throws SQLException;
 }
