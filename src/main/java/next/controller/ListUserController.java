@@ -23,7 +23,7 @@ public class ListUserController implements Controller {
         if (!UserSessionUtils.isLogined(req.getSession())) {
             return "redirect:/users/loginForm";
         }
-        UserDao userDao = new UserDao(new InsertJdbcTemplate(), new UpdateJdbcTemplate());
+        UserDao userDao = new UserDao();
         List<User> all = new ArrayList<>();
         try {
             all = userDao.findAll();

@@ -28,7 +28,7 @@ public class UpdateUserController implements Controller {
         log.debug("Update User : {}", updateUser);
         user.update(updateUser);
 
-        UserDao userDao = new UserDao(new InsertJdbcTemplate(), new UpdateJdbcTemplate());
+        UserDao userDao = new UserDao();
         try {
             userDao.update(updateUser);
         } catch (Exception e) {

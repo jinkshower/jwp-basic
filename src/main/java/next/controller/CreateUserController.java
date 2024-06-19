@@ -24,7 +24,7 @@ public class CreateUserController implements Controller {
         log.debug("User : {}", user);
 
 //        DataBase.addUser(user);
-        UserDao userDao = new UserDao(new InsertJdbcTemplate(), new UpdateJdbcTemplate());
+        UserDao userDao = new UserDao();
         try {
             userDao.insert(user);
         } catch (SQLException e) {
