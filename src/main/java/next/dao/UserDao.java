@@ -41,67 +41,41 @@ public class UserDao {
     }
 
     public List<User> findAll() throws SQLException {
-        // TODO 구현 필요함.
-        List<User> users = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            String sql = "SELECT userId, password, name, email FROM USERS";
-            pstmt = con.prepareStatement(sql);
+        String sql = "SELECT userId, password, name, email FROM USERS";
+        List<Object> query = new SelectJdbcTemplate() {
+            @Override
+            public void setValues(final PreparedStatement pstmt) throws SQLException {
 
-            rs = pstmt.executeQuery();
+            }
 
-            User user = null;
-            if (rs.next()) {
-                user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+            @Override
+            public User mapRow(final ResultSet rs) throws SQLException {
+                return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                     rs.getString("email"));
             }
-            users.add(user);
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
+        }.query(sql);
+        List<User> users = new ArrayList<>();
+        for (Object obj : query) {
+            if (obj instanceof User) {
+                users.add((User) obj);
             }
         }
-        return new ArrayList<>(users);
+        return users;
     }
 
     public User findByUserId(String userId) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, userId);
-
-            rs = pstmt.executeQuery();
-
-            User user = null;
-            if (rs.next()) {
-                user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                        rs.getString("email"));
+        String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
+        return (User) new SelectJdbcTemplate() {
+            @Override
+            public void setValues(final PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, userId);
             }
 
-            return user;
-        } finally {
-            if (rs != null) {
-                rs.close();
+            @Override
+            public Object mapRow(final ResultSet rs) throws SQLException {
+                return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                    rs.getString("email"));
             }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
+        }.queryForObject(sql);
     }
 }
