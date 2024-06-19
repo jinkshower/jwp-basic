@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import core.db.DataBase;
 import core.mvc.Controller;
+import next.dao.InsertJdbcTemplate;
+import next.dao.UpdateJdbcTemplate;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ public class ListUserController implements Controller {
         if (!UserSessionUtils.isLogined(req.getSession())) {
             return "redirect:/users/loginForm";
         }
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new InsertJdbcTemplate(), new UpdateJdbcTemplate());
         List<User> all = new ArrayList<>();
         try {
             all = userDao.findAll();
