@@ -22,6 +22,11 @@ public class UserDao {
                 pstmt.setString(3, user.getName());
                 pstmt.setString(4, user.getEmail());
             }
+
+            @Override
+            public Object mapRow(final ResultSet rs) throws SQLException {
+                return null;
+            }
         }.execute(sql);
     }
 
@@ -37,12 +42,17 @@ public class UserDao {
                 pstmt.setString(3, user.getEmail());
                 pstmt.setString(4, user.getUserId());
             }
+
+            @Override
+            public Object mapRow(final ResultSet rs) throws SQLException {
+                return null;
+            }
         }.execute(sql);
     }
 
     public List<User> findAll() throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        List<Object> query = new SelectJdbcTemplate() {
+        List<Object> query = new JdbcTemplate() {
             @Override
             public void setValues(final PreparedStatement pstmt) throws SQLException {
 
@@ -65,7 +75,7 @@ public class UserDao {
 
     public User findByUserId(String userId) throws SQLException {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return (User) new SelectJdbcTemplate() {
+        return (User) new JdbcTemplate() {
             @Override
             public void setValues(final PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, userId);
