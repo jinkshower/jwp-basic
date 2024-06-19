@@ -8,14 +8,13 @@ import next.model.User;
 
 public abstract class JdbcTemplate {
 
-    public void execute(User user) throws SQLException {
+    public void execute(String sql) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
             con = ConnectionManager.getConnection();
-            String sql = createQuery();
             pstmt = con.prepareStatement(sql);
-            setValues(user, pstmt);
+            setValues(pstmt);
             pstmt.executeUpdate();
         } finally {
             if (pstmt != null) {
@@ -28,7 +27,5 @@ public abstract class JdbcTemplate {
         }
     }
 
-    public abstract void setValues(User user, PreparedStatement pstmt) throws SQLException;
-
-    public abstract String createQuery();
+    public abstract void setValues(PreparedStatement pstmt) throws SQLException;
 }

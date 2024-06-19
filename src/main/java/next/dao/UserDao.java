@@ -12,40 +12,32 @@ import next.model.User;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
+        String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
         new JdbcTemplate() {
             @Override
-            public void setValues(final User user, final PreparedStatement pstmt)
+            public void setValues(final PreparedStatement pstmt)
                 throws SQLException {
                 pstmt.setString(1, user.getUserId());
                 pstmt.setString(2, user.getPassword());
                 pstmt.setString(3, user.getName());
                 pstmt.setString(4, user.getEmail());
             }
-
-            @Override
-            public String createQuery() {
-                return "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-            }
-        }.execute(user);
+        }.execute(sql);
     }
 
     public void update(User user) throws SQLException {
         // TODO 구현 필요함.
+        String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
         new JdbcTemplate() {
             @Override
-            public void setValues(final User user, final PreparedStatement pstmt)
+            public void setValues(final PreparedStatement pstmt)
                 throws SQLException {
                 pstmt.setString(1, user.getPassword());
                 pstmt.setString(2, user.getName());
                 pstmt.setString(3, user.getEmail());
                 pstmt.setString(4, user.getUserId());
             }
-
-            @Override
-            public String createQuery() {
-                return "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
-            }
-        }.execute(user);
+        }.execute(sql);
     }
 
     public List<User> findAll() throws SQLException {
