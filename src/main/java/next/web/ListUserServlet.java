@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import core.db.DataBase;
+import javax.servlet.http.HttpSession;
+import next.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,14 @@ public class ListUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object value = session.getAttribute("user");
+
+        if (value == null) {
+            resp.sendRedirect("/user/login");
+            return;
+        }
+
         req.setAttribute("users", DataBase.findAll());
         log.debug("users : {}", req.getAttribute("users"));
         RequestDispatcher rd = req.getRequestDispatcher("/user/list.jsp");
