@@ -25,7 +25,7 @@ public class QuestionDao {
 
     public List<Question> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String sql = "SELECT userId, password, name, email FROM USERS";
+        String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS";
 
         RowMapper<Question> rm = rs -> new Question(rs.getLong("questionId"), rs.getString("writer"), rs.getString("title"),
             rs.getString("contents"), rs.getDate("createdDate"), rs.getInt("countOfAnswer"));
