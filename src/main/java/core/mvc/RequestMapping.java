@@ -6,14 +6,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import next.controller.CreateUserController;
+import next.controller.user.CreateUserController;
 import next.controller.HomeController;
-import next.controller.ListUserController;
-import next.controller.LoginController;
-import next.controller.LogoutController;
-import next.controller.ProfileController;
-import next.controller.UpdateFormUserController;
-import next.controller.UpdateUserController;
+import next.controller.user.ListUserController;
+import next.controller.user.LoginController;
+import next.controller.user.LogoutController;
+import next.controller.user.ProfileController;
+import next.controller.user.UpdateFormUserController;
+import next.controller.user.UpdateUserController;
 
 public class RequestMapping {
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
