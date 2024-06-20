@@ -50,6 +50,12 @@ public class Question {
         return countOfAnswer;
     }
 
+    public void update(Question updateQuestion) {
+        this.writer = updateQuestion.writer;
+        this.title = updateQuestion.title;
+        this.contents = updateQuestion.contents;
+    }
+
     @Override
     public boolean equals(final Object object) {
         if (this == object) {
@@ -59,10 +65,7 @@ public class Question {
             return false;
         }
         final Question question = (Question) object;
-        return questionId == question.questionId && countOfAnswer == question.countOfAnswer
-            && Objects.equals(writer, question.writer) && Objects.equals(title,
-            question.title) && Objects.equals(contents, question.contents)
-            && Objects.equals(createdDate, question.createdDate);
+        return questionId == question.questionId;
     }
 
     @Override
