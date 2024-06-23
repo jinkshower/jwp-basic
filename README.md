@@ -21,4 +21,6 @@
 10. jspview는 model에 담긴 모든 정보는 HttpServletRequest에 담아주고 RequestDispatcher의 forward로 home.jsp로 포워딩을 호출한다.
 
 #### 7. next.web.qna package의 ShowController는 멀티 쓰레드 상황에서 문제가 발생하는 이유에 대해 설명하라.
-* 
+* 문제가 될 만한 이유- question. answers가 인스턴스 변수로 선언되어 있고 이를 할당하는 execute가 있음. 쓰레드마다 상태가 달라질 수 있는 여지가 있다는 것. (questionId가 1인 요청과 2인 요청에 따라 question과 answers는 달라져야 한다)
+멀티 쓰레드에서 QuestionDao나 AnswerDao에서 찾은 것들이 question에 할당 될때 같은 인스턴스 변수를 사용하기 때문에 다른 값이 갱신 될 수 있음
+* 따라서 상태(인스턴스 변수)를 가지지 않고 Question question으로 새로운 객체를 생성하여 쓰레드마다 다른 객체를 가리키게 하여서 해결하면 된다.
