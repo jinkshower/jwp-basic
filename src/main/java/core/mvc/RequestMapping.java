@@ -7,6 +7,7 @@ import next.controller.HomeController;
 import next.controller.qna.AddAnswerController;
 import next.controller.qna.AddQuestionController;
 import next.controller.qna.AddQuestionFormController;
+import next.controller.qna.ApiQuestionListController;
 import next.controller.qna.DeleteAnswerController;
 import next.controller.qna.ShowController;
 import next.controller.user.CreateUserController;
@@ -40,6 +41,7 @@ public class RequestMapping {
         mappings.put("/api/qna/deleteAnswer", new DeleteAnswerController());
         mappings.put("/qna/form", new AddQuestionFormController());
         mappings.put("/qna/create", new AddQuestionController());
+        mappings.put("/api/qna/list", new ApiQuestionListController());
 
         logger.info("Initialized Request Mapping!");
     }
