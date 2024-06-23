@@ -57,6 +57,10 @@ public class Question {
         return countOfComment;
     }
 
+    public void incrementCountOfComment() {
+        this.countOfComment++;
+    }
+
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", writer=" + writer + ", title=" + title + ", contents="

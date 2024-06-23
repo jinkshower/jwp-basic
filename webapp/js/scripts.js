@@ -5,7 +5,6 @@ function addAnswer(e) {
   e.preventDefault();
 
   var queryString = $("form[name=answer]").serialize();
-
   $.ajax({
     type : 'post',
     url : '/api/qna/addAnswer',
@@ -18,9 +17,11 @@ function addAnswer(e) {
 
 function onSuccess(json, status){
   var answer = json.answer;
+  var question = json.question;
   var answerTemplate = $("#answerTemplate").html();
   var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
   $(".qna-comment-slipp-articles").prepend(template);
+  $(".qna-comment-count strong").text(question.countOfComment);
 }
 
 function onError(xhr, status) {

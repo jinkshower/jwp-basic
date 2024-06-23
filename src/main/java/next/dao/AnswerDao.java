@@ -13,7 +13,8 @@ import core.jdbc.KeyHolder;
 import core.jdbc.PreparedStatementCreator;
 import core.jdbc.RowMapper;
 
-public class AnswerDao {
+public class
+AnswerDao {
     public Answer insert(Answer answer) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES (?, ?, ?, ?)";
