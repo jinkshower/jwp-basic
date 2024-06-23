@@ -61,6 +61,15 @@ public class Question {
         this.countOfComment++;
     }
 
+    public boolean isSameUser(final User user) {
+        return user.isSameUser(this.writer);
+    }
+
+    public void update(final Question newQuestion) {
+        this.title = newQuestion.title;
+        this.contents = newQuestion.contents;
+    }
+
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", writer=" + writer + ", title=" + title + ", contents="
@@ -87,5 +96,6 @@ public class Question {
         if (questionId != other.questionId)
             return false;
         return true;
+
     }
 }
