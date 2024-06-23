@@ -1,15 +1,13 @@
 package next.controller.qna;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import next.dao.AnswerDao;
 import next.model.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AddAnswerController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(AddAnswerController.class);
