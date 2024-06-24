@@ -1,7 +1,9 @@
 package core.mvc;
 
 import core.nmvc.AnnotationHandlerMapping;
-import core.nmvc.HandlerExecution;
+import core.nmvc.ControllerHandlerAdapter;
+import core.nmvc.HandlerAdapter;
+import core.nmvc.HandlerExecutionAdapter;
 import core.nmvc.HandlerMapping;
 import java.io.IOException;
 
@@ -24,6 +26,7 @@ public class DispatcherServlet extends HttpServlet {
     private LegacyRequestMapping lrm;
     private AnnotationHandlerMapping ahm;
     private List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private List<HandlerAdapter> handlerAdapters = new ArrayList<>();
 
     @Override
     public void init() throws ServletException {
@@ -34,6 +37,8 @@ public class DispatcherServlet extends HttpServlet {
 
         handlerMappings.add(lrm);
         handlerMappings.add(ahm);
+        handlerAdapters.add(new ControllerHandlerAdapter());
+        handlerAdapters.add(new HandlerExecutionAdapter());
     }
 
     @Override
@@ -65,10 +70,11 @@ public class DispatcherServlet extends HttpServlet {
 
     private ModelAndView execute(final Object handler, final HttpServletRequest req,
         final HttpServletResponse resp) throws Exception {
-        if (handler instanceof Controller) {
-            return ((Controller) handler).execute(req, resp);
-        } else {
-            return ((HandlerExecution) handler).handle(req, resp);
+        for (HandlerAdapter handlerAdapter : handlerAdapters) {
+            if (handlerAdapter.supports(handler)) {
+                return handlerAdapter.handle(req, resp, handler);
+            }
         }
+        return null;
     }
 }
