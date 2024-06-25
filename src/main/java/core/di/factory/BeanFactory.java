@@ -1,6 +1,8 @@
 package core.di.factory;
 
 import com.google.common.collect.Lists;
+import core.annotation.Controller;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +78,16 @@ public class BeanFactory {
             args.add(bean);
         }
         return BeanUtils.instantiateClass(constructor, args.toArray());
+    }
+
+    public Map<Class<?>, Object> getControllers() {
+        Map<Class<?>, Object> controllers = Maps.newHashMap();
+        for (Class<?> clazz : preInstanticateBeans) {
+            Annotation annotation = clazz.getAnnotation(Controller.class);
+            if (annotation != null) {
+                controllers.put(clazz, beans.get(clazz));
+            }
+        }
+        return controllers;
     }
 }
